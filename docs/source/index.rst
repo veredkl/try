@@ -1,104 +1,47 @@
-**A pipeline for BCR repertoire libraries from the form of - UMI Barcoded Illumina MiSeq 2x250 BCR mRNA. that were produced in the same fashion as those in [sterm et al. 2014](https://pubmed.ncbi.nlm.nih.gov/25100741/)**
+.. include:: ../README.rst
+
+# dolphinNext
 
 
-<u>Sequence library:</u>
+The repository contains [DolphinNext](https://dolphinnext.readthedocs.io/en/latest/index.html#) pipelines for adaptive immune receptore repertoire sequencing (AIRR-seq) processing.
 
-The sequences were amplified using CPrimers and VPrimers. They were sequences with Illumins MiSeq 2x250. 
+We have devided the pipelines into two main sections:
+1. Pre-processing
+2. Downstream analysis
 
-Each 250 base-pair read was sequenced from one end of the target cDNA, so that the two reads together cover the entire variable region of the Ig heavy chain. The V(D)J reading frame proceeds from the start of read 2 to the start of read 1. Read 1 is in the opposite orientation (reverse complement), and contains a 15 nucleotide UMI barcode preceding the C-region primer sequence.
+##  Repository layout
 
-<u>Input files:</u>
+In each section directory you can find each of the pipelines directories containing the dolphinnext pipeline (XX.dn) as well as the configurations and the nextflow script (XX.nf)
 
-1. The read can downloaded from the NCBI Sequence Read Archive under BioProject accession ID: PRJNA248475 or downloaded or downloaded first 25,000 sequences of sample M12 (accession: SRR1383456) using fastq-dump from the SRA Toolkit
-2. The primers sequences available online at the table below.
+## Pre-processing
 
-<u>Output files:</u>
+In this section you can find pipelines to process the sequencer output files, meaning from 'raw reads' into an aligner ready fasta file.
 
-1. sample_collapse-unique.fastq
-2. sample_atleast-2.fastq
-3. log and log tab file for each step.
+The pipeplines were build based on the [immcantation](https://immcantation.readthedocs.io/en/stable/) framework and spesificly the [pRESTO](https://presto.readthedocs.io/) tool suite.
 
-
-<u>Sequence processing:</u>
-
-* Quality control, UMI annotation and primer masking
-
-	1. FilterSeq quality
-	2. MaskPrimer score
-* Generation of UMI consensus sequences
-
-	3. PairSeq
-	4. BuildConsensus
-* Paired-end assembly of UMI consensus sequences
-
-	5. PairSeq	
-	6. AssemblePairs align
-* Deduplication and filtering
-
-	7. ParseHeaders collapse
-	8. CollapseSeq
-	9. SplitSeq group
+### Available pipelines:
 
 
+- [pipline1](https://github.com/yaarilab/pipeline1) - [Stern2014](https://presto.readthedocs.io/en/stable/workflows/Stern2014_Workflow.html) - UMI Barcoded Illumina MiSeq 2x250 BCR mRNA
+- [pipline2](https://github.com/yaarilab/pipeline2) - [Greiff2014](https://presto.readthedocs.io/en/stable/workflows/Greiff2014_Workflow.html) - Illumina MiSeq 2x250 BCR mRNA
+- [pipline3](https://github.com/yaarilab/pipeline3) - [VanderHeiden2017](https://presto.readthedocs.io/en/stable/workflows/VanderHeiden2017_Workflow.html) - UMI Barcoded Illumina MiSeq 325+275 paired-end 5’RACE BCR mRNA
+- [pipline4](https://github.com/yaarilab/pipeline4) - [Galson2020](https://www.frontiersin.org/articles/10.3389/fimmu.2020.605170/full) - UMI Barcoded Illumina MiSeq 2x300 BCR mRNA with FR1 primers
+- [pipline5](https://github.com/yaarilab/pipeline5) - [Yaari1](https://bitbucket.org/yaarilab/processpipeline/src/master/pre_process/Pipeline_P1.sh) - 5'RACE UMI barcoded Illumina Miseq 2x300 pair-end
+- [pipline6](https://github.com/yaarilab/pipeline6) - [Yaari2](https://bitbucket.org/yaarilab/processpipeline/src/master/pre_process/Pipeline_P11.sh) - 5'RACE M1S and Z tags to sample pair-end reads
 
-**CPrimers**
+## Downstream analysis
 
-| Header     | Primer |
-| ----------- | ----------- |
-| IGHG   | CSGATGGGCCCTTGGTGG       |
-| IGHM   |GGGTTGGGGCGGATGCAC        |
-| IGHA   | CCTTGGGGCTGGTCGGGG       |
-| IGHD   | CATCCGGAGCCTTGGTGG       |
-| IGHE   | CGGATGGGCTCTGTGTGG       |
+In this section you can find pipelines to analyze processed reads and infer genotype and haplotype.
 
+The pipeplines were build based on the [Yaari lab framework](https://hub.docker.com/repository/docker/peresay/suite), that contains tools from:
+- [immcantaton](https://immcantation.readthedocs.io/en/stable/)
+- [VDJbase](vdjbase.org)
+- [TIgGER](https://tigger.readthedocs.io/en/stable/)
+- [RAbHIT](https://yaarilab.bitbucket.io/RAbHIT/)
+- [PIgLET](https://yaarilab.github.io/IGHV_reference_book/piglet_package.html)
 
-**VPrimers**
-
-| Header     | Primer |
-| ----------- | ----------- |
-| IGHV_1   | GAGGTGCAGCTGGTGGAGTCCG        |
-| IGHV_2   | GAGGTGCAGCTGGTGGAGTCTGG       |
-| IGHV_3   | CAGGTCACCTTGAGGGAGTCTGGTCC    |
-| IGHV_4   | CAGGTTCAGCTGTTGCAGCCTGG       |
-| IGHV_5   | CAGGTGCAGCTACAGCAGTGGGG       |
-| IGHV_6   | CAGGTGCAGCTGGTGCAATCTGG       |
-| IGHV_7   | CAGGTCACCTTGAAGGAGTCTGGTCC    |
-| IGHV_8   | CAGGTCCAGCTGGTACAGTCTGGG      |
-| IGHV_9   | CAGGACCAGTTGGTGCAGTCTGGG      |
-| IGHV_10  | CAGGTGCAGCTGGTGGAGTCTGG       |
-| IGHV_11   | CAGATGCAGCTGGTGCAGTCTGG       |
-| IGHV_12   | CAAATGCAGCTGGTGCAGTCTGGG      |
-| IGHV_13   | GAAGTGCAGCTGGTGGAGTCTGGG      |
-| IGHV_14   | CAGGTGCAGCTGGTGCAGTCTG        |
-| IGHV_15   | GAGGATCAGCTGGTGGAGTCTGGG      |
-| IGHV_16   | GAGGTCCAGCTGGTACAGTCTGGG      |
-| IGHV_17   | CAGCTGCAGCTGCAGGAGTCC         |
-| IGHV_20   | CAGGTACAGCTGCAGCAGTCAGGT      |
-|IGHV_21	|GAGATGCAGCTGGTGGAGTCTGGG	|
-|IGHV_22	|GAGGTGCATCTGGTGGAGTCTGGG	|
-|IGHV_25	|CAGGTCCAACTGGTGTAGTCTGGAGC	|
-|IGHV_26	|GAGGTGCAGCTGGTGCAGTCTG		|
-|IGHV_27	|GAGGTGCAGCTGGTGGAGTCTCG	|
-|IGHV_28	|GAGGTTCAGCTGGTGCAGTCTGGG	|
-|IGHV_30	|GAAGTGCAGCTGGTGCAGTCTGG	|
-|IGHV_31	|GAGGTGGAGCTGATAGAGTCCATAGA	|
-|IGHV_32	|ACAGTGCAGCTGGTGGAGTCTGG	|
-|IGHV_33	|GAGGTGCAGCTGGAGGAGTCTGG	|
-|IGHV_34	|GAGGTACAGCTGGTGGAGTCTGAAGA	|
-|IGHV_35	|CAGGTGCAGCTGCAGGAGTCG		|
-|IGHV_36	|GAGGTGCAGCTGTTGGAGTCTGGG	|
-|IGHV_37	|CAGGTGCAGCTGGGGCAGTC		|
-|IGHV_38	|CAGCTGCAGCTGCAGGAGTCG		|
-|IGHV_39	|CAGGTTCAGCTGGTGCAGTCTGGA	|
-|IGHV_40	|GAGGTGCAGCTGGTAGAGTCTGGG	|
-|IGHV_41	|CAGGTCCAGCTTGTGCAGTCTGGG	|
-|IGHV_42	|GAGGTGCAGCTGTTGCAGTCTGC	|
-|IGHV_43	|GAGGTACAACTGGTGGAGTCTGGGGG	|
-|IGHV_44	|CAGATCACCTTGAAGGAGTCTGGTCC	|
-|IGHV_45	|CAGGTACAGCTGATGCAGTCTGGGG	|
-	
-
-
+### Available pipelines:
+- [ASC2022](https://yaarilab.github.io/IGHV_reference_book/allele_based_genotype.html) - IGH BCR repertoires analysis with IgBLAST sequence alignment, novel allele inference by TIgGER, and genotype inference by PIgLET.
 
 
 .. note::
