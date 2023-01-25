@@ -20,5 +20,6 @@ Contents
 
    usage
    api
+   vered
    
 Lumache has its documentation hosted on Read the Docs.
