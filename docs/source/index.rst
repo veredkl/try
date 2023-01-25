@@ -1,6 +1,8 @@
 
 
-# dolphinNext
+dolphinNext
+=======================================
+
 
 
 The repository contains [DolphinNext](https://dolphinnext.readthedocs.io/en/latest/index.html#) pipelines for adaptive immune receptore repertoire sequencing (AIRR-seq) processing.
