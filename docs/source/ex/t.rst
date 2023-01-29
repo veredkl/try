@@ -1,7 +1,6 @@
 VERED
 =====
 
-.. _installation:
 
 Installation
 ------------
