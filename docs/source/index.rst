@@ -57,5 +57,6 @@ Contents
 
    usage
    api
+   t
    
 Lumache has its documentation hosted on Read the Docs.
